@@ -1,0 +1,18 @@
+# depslib dependency file v1.0
+1770985859 source:c:\users\jaime\onedrive\documentos\escola\programación\projecto_d\jugador.c
+	"jugador.h"
+
+1770984689 c:\users\jaime\onedrive\documentos\escola\programación\projecto_d\jugador.h
+	"raylib.h"
+
+1770986439 source:c:\users\jaime\onedrive\documentos\escola\programación\projecto_d\main.c
+	"raylib.h"
+	"jugador.h"
+
+1770987667 source:c:\users\jaime\onedrive\documentos\escola\programación\projecto_d\escenario.c
+	"escenario.h"
+	"raymath.h"
+
+1770987237 c:\users\jaime\onedrive\documentos\escola\programación\projecto_d\escenario.h
+	"raylib.h"
+

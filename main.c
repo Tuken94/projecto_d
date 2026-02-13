@@ -16,6 +16,8 @@
 ********************************************************************************************/
 
 #include "raylib.h"
+#include "jugador.h"
+#include "escenario.h"
 
 //------------------------------------------------------------------------------------------
 // Types and Structures Definition
@@ -37,9 +39,10 @@ int main(void)
     GameScreen currentScreen = LOGO;
 
     // TODO: Initialize all required variables and load all required data here!
-
-    int framesCounter = 0;          // Useful to count frames
-
+    Escenario escenario = EscenarioCrear(screenWidth, screenHeight);
+    Jugador jugador = JugadorCrear((Vector2){screenWidth/2.0f - 16, screenHeight/2.0f - 16});
+    float deltaTime;
+    float framesCounter = 0.0f;         // Useful to count frames
     SetTargetFPS(60);               // Set desired framerate (frames-per-second)
     //--------------------------------------------------------------------------------------
 
@@ -48,16 +51,17 @@ int main(void)
     {
         // Update
         //----------------------------------------------------------------------------------
+        deltaTime = GetFrameTime();
         switch (currentScreen)
         {
             case LOGO:
             {
                 // TODO: Update LOGO screen variables here!
 
-                framesCounter++;    // Count frames
+                framesCounter+=deltaTime;    // Count frames
 
                 // Wait for 2 seconds (120 frames) before jumping to TITLE screen
-                if (framesCounter > 120)
+                if (framesCounter >= 2.0f)
                 {
                     currentScreen = TITLE;
                 }
@@ -75,7 +79,7 @@ int main(void)
             case GAMEPLAY:
             {
                 // TODO: Update GAMEPLAY screen variables here!
-
+                ActualizarJugador(&jugador,deltaTime);
                 // Press enter to change to ENDING screen
                 if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP))
                 {
@@ -122,9 +126,7 @@ int main(void)
                 case GAMEPLAY:
                 {
                     // TODO: Draw GAMEPLAY screen here!
-                    DrawRectangle(0, 0, screenWidth, screenHeight, PURPLE);
-                    DrawText("GAMEPLAY SCREEN", 20, 20, 40, MAROON);
-                    DrawText("PRESS ENTER or TAP to JUMP to ENDING SCREEN", 130, 220, 20, MAROON);
+                    DibujarJugador(&jugador);
 
                 } break;
                 case ENDING:
