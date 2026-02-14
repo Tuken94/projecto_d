@@ -1,5 +1,6 @@
 #include "escenario.h"
 #include "raymath.h"
+#include <stdlib.h>
 
 Escenario EscenarioCrear(int anchoVentana, int altoVentana){
     Escenario escenario;
@@ -9,7 +10,7 @@ Escenario EscenarioCrear(int anchoVentana, int altoVentana){
     escenario.anchoPx = anchoVentana;
     escenario.altoPx = altoVentana;
 
-    // Crear array din mico e inicializar todas las casillas a 0 (vac¡as)
+    // Crear array dinï¿½mico e inicializar todas las casillas a 0 (vacï¿½as)
     int totalCasillas = escenario.anchoCasillas * escenario.altoCasillas;
     escenario.casillas = (int*)malloc(totalCasillas * sizeof(int));
 
@@ -29,14 +30,14 @@ void EscenarioLiberar(Escenario* esc){
 
 int ObtenerCasilla(Escenario* esc, int x, int y){
     if(x < 0 || x >= esc->anchoCasillas || y < 0 || y >= esc->altoCasillas){
-        return -1; // Fuera de l¡mites
+        return -1; // Fuera de lï¿½mites
     }
     return esc->casillas[y * esc->anchoCasillas + x];
 }
 
 void EstablecerCasilla(Escenario* esc, int x, int y, int valor){
     if(x < 0 || x >= esc->anchoCasillas || y < 0 || y >= esc->altoCasillas){
-        return; // Fuera de l¡mites
+        return; // Fuera de lï¿½mites
     }
     esc->casillas[y * esc->anchoCasillas + x] = valor;
 }
@@ -63,5 +64,5 @@ Vector2 CentroCasilla(Vector2 casilla){
 }
 
 void EscenarioDibujar(){
-    // Por ahora vac¡a, solo l¢gica
+    // Por ahora vacï¿½a, solo lï¿½gica
 }

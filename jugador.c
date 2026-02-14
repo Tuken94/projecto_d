@@ -33,7 +33,7 @@ Jugador JugadorCrear(Vector2 posicionInicial){
         (Rectangle){0,0,48,64},
         (Rectangle){pos_ini.x+PROTA_X_HITBOX,pos_ini.y+PROTA_Y_HITBOX,PROTA_ANCHO_HITBOX,PROTA_ALTO_HITBOX},
         VEL_INICIAL,
-        (Vector2){0,0}, // Direcci¢n inicial
+        (Vector2){0,0}, // Direcciï¿½n inicial
         (Vector2){0,0}, // Losa inicial
         PROTA_VIDA_MAX  // <--- IMPORTANTE: Inicializar la vida
     };
@@ -49,15 +49,15 @@ Jugador JugadorCrear(Vector2 posicionInicial){
 
 void ActualizarJugador(Jugador* j,float delta){
     Vector2 dir={0,0};
-    // Detectar input horizontal (A y D se cancelan entre s¡)
+    // Detectar input horizontal (A y D se cancelan entre sÃ­)
     if(IsKeyDown(KEY_A)) dir.x--;
     if(IsKeyDown(KEY_D)) dir.x++;
 
-    // Detectar input vertical (W y S se cancelan entre s¡)
+    // Detectar input vertical (W y S se cancelan entre sÃ­)
     if(IsKeyDown(KEY_W)) dir.y--;
     if(IsKeyDown(KEY_S)) dir.y++;
 
-    // Solo permitir movimiento en una direcci¢n (4 direcciones, sin diagonales)
+    // Solo permitir movimiento en una direcciÃ³n (4 direcciones, sin diagonales)
     // Si hay input horizontal y vertical, cancelar ambos
     if(dir.x != 0 && dir.y != 0){
         dir.x = 0;
