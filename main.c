@@ -47,7 +47,7 @@ int main(void){
 
     // Main game loop
     while (!WindowShouldClose()){    // Detect window close button or ESC key
-    
+
         // Update
         //----------------------------------------------------------------------------------
         deltaTime = GetFrameTime();
@@ -125,6 +125,7 @@ int main(void){
                 case GAMEPLAY:
                 {
                     // TODO: Draw GAMEPLAY screen here!
+                    EscenarioDibujar();
                     DibujarJugador(&jugador);
 
                 } break;

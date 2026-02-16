@@ -45,7 +45,7 @@ Jugador JugadorCrear(Vector2 posicionInicial){
     j.vida = JUGADOR_VIDA_MAX;
     j.dir = (Vector2){0, 0};
     j.enMovimiento = false;
-    
+
     // Calcular en qué casilla empieza
     j.casillaActual = (Vector2){
         floorf(posicionInicial.x / 32),
@@ -61,18 +61,18 @@ void ActualizarJugador(Jugador* j,float delta){
     if(j->enMovimiento){
         // Calcular centro del destino
         Vector2 centroDestino = {
-            j->casillaDestino.x * 32 + 16,
-            j->casillaDestino.y * 32 + 16
+            j->casillaDestino.x * 32 + 16 - JUGADOR_ANCHO_HITBOX/2,
+            j->casillaDestino.y * 32 + 16 - JUGADOR_ALTO_HITBOX/2
         };
-        
+
         // Moverse hacia el centro del destino
         Vector2 direccion = {
             centroDestino.x - j->posicion.x,
             centroDestino.y - j->posicion.y
         };
-        
+
         float distancia = sqrtf(direccion.x * direccion.x + direccion.y * direccion.y);
-        
+
         // Si ya llegó al centro
         if(distancia < 2.0f){
             j->posicion = centroDestino;
@@ -84,7 +84,7 @@ void ActualizarJugador(Jugador* j,float delta){
             // Normalizar y mover
             direccion.x /= distancia;
             direccion.y /= distancia;
-            
+
             j->posicion.x += direccion.x * j->velocidad * delta;
             j->posicion.y += direccion.y * j->velocidad * delta;
         }
@@ -92,13 +92,13 @@ void ActualizarJugador(Jugador* j,float delta){
     // Si no está en movimiento, puede aceptar input
     else{
         Vector2 input = {0, 0};
-        
+
         // Detectar input (solo 4 direcciones)
         if(IsKeyDown(KEY_W)) input.y = -1;
         else if(IsKeyDown(KEY_S)) input.y = 1;
         else if(IsKeyDown(KEY_A)) input.x = -1;
         else if(IsKeyDown(KEY_D)) input.x = 1;
-        
+
         // Si hay input, iniciar movimiento
         if(input.x != 0 || input.y != 0){
             // Calcular casilla destino
@@ -106,20 +106,20 @@ void ActualizarJugador(Jugador* j,float delta){
                 j->casillaActual.x + input.x,
                 j->casillaActual.y + input.y
             };
-            
+
             // Calcular el hitbox que tendría en el centro de la casilla destino
             Vector2 centroDestino = {
-                destino.x * 32 + 16,
-                destino.y * 32 + 16
+                destino.x * 32 + 16 - JUGADOR_ANCHO_HITBOX/2,
+                destino.y * 32 + 16 - JUGADOR_ALTO_HITBOX/2
             };
-            
+
             Rectangle hitboxDestino = {
                 centroDestino.x,
                 centroDestino.y,
                 JUGADOR_ANCHO_HITBOX,
                 JUGADOR_ALTO_HITBOX
             };
-            
+
             // Solo moverse si la casilla destino es transitable
             if(UbicacionLibre(hitboxDestino)){
                 j->dir = input;

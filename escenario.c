@@ -2,7 +2,7 @@
 #include "raymath.h"
 #include <stdlib.h>
 
-// Mapa simple: 2 = suelo, 1 = muro, 0 = vac√≠o
+// Mapa simple: 2 = suelo, 1 = muro, 0 = vac°o
 int TERRENO[TERRENO_ALTO][TERRENO_ANCHO] = {
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
     {1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1},
@@ -29,19 +29,19 @@ bool UbicacionLibre(Rectangle r){
     int destinoX = (int)(r.x / ANCHO_CASILLA);
     int destinoY = (int)(r.y / ALTO_CASILLA);
     if(TERRENO[destinoY][destinoX] < 2) return false;
-    
-    // Esquina superior derecha
-    destinoX = (int)((r.x + r.width) / ANCHO_CASILLA);
+
+    // Esquina superior derecha (restamos 1 para no contar el borde siguiente)
+    destinoX = (int)((r.x + r.width - 1) / ANCHO_CASILLA);
     if(TERRENO[destinoY][destinoX] < 2) return false;
-    
+
     // Esquina inferior derecha
-    destinoY = (int)((r.y + r.height) / ALTO_CASILLA);
+    destinoY = (int)((r.y + r.height - 1) / ALTO_CASILLA);
     if(TERRENO[destinoY][destinoX] < 2) return false;
-    
+
     // Esquina inferior izquierda
     destinoX = (int)(r.x / ANCHO_CASILLA);
     if(TERRENO[destinoY][destinoX] < 2) return false;
-    
+
     return true;
 }
 
@@ -67,4 +67,20 @@ Vector2 CentroCasilla(Vector2 casilla){
 }
 
 void EscenarioDibujar(){
+    for (int i = 0; i < TERRENO_ALTO; i++){
+        for (int j = 0; j < TERRENO_ANCHO; j++){
+            int posX = j * ANCHO_CASILLA;
+            int posY = i * ALTO_CASILLA;
+
+             if(TERRENO[i][j] == 1){
+                // Muro = negro
+                DrawRectangle(posX, posY, ANCHO_CASILLA, ALTO_CASILLA, BLACK);
+            }
+            else if(TERRENO[i][j] == 2){
+                // Suelo = blanco con borde negro
+                DrawRectangle(posX, posY, ANCHO_CASILLA, ALTO_CASILLA, WHITE);
+                DrawRectangleLines(posX, posY, ANCHO_CASILLA, ALTO_CASILLA, BLACK);
+            }
+        }
+    }
 }
