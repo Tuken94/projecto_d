@@ -1,4 +1,5 @@
 #include "jugador.h"
+#include "escenario.h"
 
 const int VEL_INICIAL=200;
 const char* archivo_andando="textures/Sprites/Walk/walk.png";
@@ -43,29 +44,90 @@ Jugador JugadorCrear(Vector2 posicionInicial){
     j.velocidad = VEL_INICIAL;
     j.vida = JUGADOR_VIDA_MAX;
     j.dir = (Vector2){0, 0};
+    j.enMovimiento = false;
+    
+    // Calcular en qué casilla empieza
+    j.casillaActual = (Vector2){
+        floorf(posicionInicial.x / 32),
+        floorf(posicionInicial.y / 32)
+    };
+    j.casillaDestino = j.casillaActual;
 
     return j;
 }
 
 void ActualizarJugador(Jugador* j,float delta){
-    Vector2 dir={0,0};
-    // Detectar input horizontal (A y D se cancelan entre sí)
-    if(IsKeyDown(KEY_A)) dir.x--;
-    if(IsKeyDown(KEY_D)) dir.x++;
-
-    // Detectar input vertical (W y S se cancelan entre sí)
-    if(IsKeyDown(KEY_W)) dir.y--;
-    if(IsKeyDown(KEY_S)) dir.y++;
-
-    // Solo permitir movimiento en una dirección (4 direcciones, sin diagonales)
-    // Si hay input horizontal y vertical, cancelar ambos
-    if(dir.x != 0 && dir.y != 0){
-        dir.x = 0;
-        dir.y = 0;
+    // Si está en movimiento, continuar deslizándose hacia el destino
+    if(j->enMovimiento){
+        // Calcular centro del destino
+        Vector2 centroDestino = {
+            j->casillaDestino.x * 32 + 16,
+            j->casillaDestino.y * 32 + 16
+        };
+        
+        // Moverse hacia el centro del destino
+        Vector2 direccion = {
+            centroDestino.x - j->posicion.x,
+            centroDestino.y - j->posicion.y
+        };
+        
+        float distancia = sqrtf(direccion.x * direccion.x + direccion.y * direccion.y);
+        
+        // Si ya llegó al centro
+        if(distancia < 2.0f){
+            j->posicion = centroDestino;
+            j->casillaActual = j->casillaDestino;
+            j->enMovimiento = false;
+            j->dir = (Vector2){0, 0};
+        }
+        else{
+            // Normalizar y mover
+            direccion.x /= distancia;
+            direccion.y /= distancia;
+            
+            j->posicion.x += direccion.x * j->velocidad * delta;
+            j->posicion.y += direccion.y * j->velocidad * delta;
+        }
     }
-
-    j->posicion.x += dir.x * j->velocidad * delta;
-    j->posicion.y += dir.y * j->velocidad * delta;
+    // Si no está en movimiento, puede aceptar input
+    else{
+        Vector2 input = {0, 0};
+        
+        // Detectar input (solo 4 direcciones)
+        if(IsKeyDown(KEY_W)) input.y = -1;
+        else if(IsKeyDown(KEY_S)) input.y = 1;
+        else if(IsKeyDown(KEY_A)) input.x = -1;
+        else if(IsKeyDown(KEY_D)) input.x = 1;
+        
+        // Si hay input, iniciar movimiento
+        if(input.x != 0 || input.y != 0){
+            // Calcular casilla destino
+            Vector2 destino = {
+                j->casillaActual.x + input.x,
+                j->casillaActual.y + input.y
+            };
+            
+            // Calcular el hitbox que tendría en el centro de la casilla destino
+            Vector2 centroDestino = {
+                destino.x * 32 + 16,
+                destino.y * 32 + 16
+            };
+            
+            Rectangle hitboxDestino = {
+                centroDestino.x,
+                centroDestino.y,
+                JUGADOR_ANCHO_HITBOX,
+                JUGADOR_ALTO_HITBOX
+            };
+            
+            // Solo moverse si la casilla destino es transitable
+            if(UbicacionLibre(hitboxDestino)){
+                j->dir = input;
+                j->casillaDestino = destino;
+                j->enMovimiento = true;
+            }
+        }
+    }
 }
 
 void DibujarJugador(Jugador* j){

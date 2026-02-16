@@ -2,6 +2,10 @@
 #define JUGADOR_H_INCLUDED
 
 #include "raylib.h"
+#include "raymath.h"
+#include <stdbool.h>
+#include <stdio.h>
+
 #define JUGADOR_ANCHO_FRAME 48
 #define JUGADOR_ALTO_FRAME 64
 #define JUGADOR_ANCHO_HITBOX 32
@@ -20,6 +24,9 @@ typedef struct{
     Vector2 dir;
     Vector2 tile;
     int vida;
+    Vector2 casillaActual;
+    Vector2 casillaDestino;
+    bool enMovimiento;
 }Jugador;
 
 Jugador JugadorCrear(Vector2);//posicion inicial

@@ -2,27 +2,20 @@
 #define ESCENARIO_H_INCLUDED
 
 #include "raylib.h"
+#include <stdbool.h>
 
 #define ALTO_CASILLA 32
 #define ANCHO_CASILLA 32
+#define TERRENO_ANCHO 25
+#define TERRENO_ALTO 14
 
-typedef struct{
-    int anchoCasillas;  // Ancho en casillas
-    int altoCasillas;   // Alto en casillas
-    int anchoPx;        // Ancho en pixeles
-    int altoPx;         // Alto en pixeles
-    int* casillas;      // Array dinamico [y * anchoCasillas + x]
-}Escenario;
+// 0 = vacío/fuera, 1 = muro, 2 = suelo transitable
+extern int TERRENO[TERRENO_ALTO][TERRENO_ANCHO];
 
-Escenario EscenarioCrear(int anchoVentana, int altoVentana);
+void EscenarioIniciar();
 
-void EscenarioLiberar(Escenario* esc);
-
-// Obtener valor de una casilla
-int ObtenerCasilla(Escenario* esc, int x, int y);
-
-// Establecer valor de una casilla
-void EstablecerCasilla(Escenario* esc, int x, int y, int valor);
+// Comprueba si un rectángulo puede estar en esa posición (no colisiona con muros)
+bool UbicacionLibre(Rectangle hitbox);
 
 // Convertir posición en píxeles a coordenadas de casilla
 Vector2 PixelesACasilla(Vector2 posicionPx);

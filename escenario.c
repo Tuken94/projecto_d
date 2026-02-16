@@ -2,44 +2,47 @@
 #include "raymath.h"
 #include <stdlib.h>
 
-Escenario EscenarioCrear(int anchoVentana, int altoVentana){
-    Escenario escenario;
+// Mapa simple: 2 = suelo, 1 = muro, 0 = vacío
+int TERRENO[TERRENO_ALTO][TERRENO_ANCHO] = {
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+    {1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1},
+    {1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1},
+    {1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1},
+    {1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1},
+    {1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1},
+    {1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1},
+    {1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1},
+    {1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1},
+    {1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1},
+    {1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1},
+    {1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1},
+    {1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1},
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+};
 
-    escenario.anchoCasillas = anchoVentana / ANCHO_CASILLA;
-    escenario.altoCasillas = altoVentana / ALTO_CASILLA;
-    escenario.anchoPx = anchoVentana;
-    escenario.altoPx = altoVentana;
-
-    // Crear array din�mico e inicializar todas las casillas a 0 (vac�as)
-    int totalCasillas = escenario.anchoCasillas * escenario.altoCasillas;
-    escenario.casillas = (int*)malloc(totalCasillas * sizeof(int));
-
-    for(int i = 0; i < totalCasillas; i++){
-        escenario.casillas[i] = 0;
-    }
-
-    return escenario;
+void EscenarioIniciar(){
+    // Por ahora nada que inicializar (sin texturas)
 }
 
-void EscenarioLiberar(Escenario* esc){
-    if(esc->casillas != NULL){
-        free(esc->casillas);
-        esc->casillas = NULL;
-    }
-}
-
-int ObtenerCasilla(Escenario* esc, int x, int y){
-    if(x < 0 || x >= esc->anchoCasillas || y < 0 || y >= esc->altoCasillas){
-        return -1; // Fuera de l�mites
-    }
-    return esc->casillas[y * esc->anchoCasillas + x];
-}
-
-void EstablecerCasilla(Escenario* esc, int x, int y, int valor){
-    if(x < 0 || x >= esc->anchoCasillas || y < 0 || y >= esc->altoCasillas){
-        return; // Fuera de l�mites
-    }
-    esc->casillas[y * esc->anchoCasillas + x] = valor;
+bool UbicacionLibre(Rectangle r){
+    // Esquina superior izquierda
+    int destinoX = (int)(r.x / ANCHO_CASILLA);
+    int destinoY = (int)(r.y / ALTO_CASILLA);
+    if(TERRENO[destinoY][destinoX] < 2) return false;
+    
+    // Esquina superior derecha
+    destinoX = (int)((r.x + r.width) / ANCHO_CASILLA);
+    if(TERRENO[destinoY][destinoX] < 2) return false;
+    
+    // Esquina inferior derecha
+    destinoY = (int)((r.y + r.height) / ALTO_CASILLA);
+    if(TERRENO[destinoY][destinoX] < 2) return false;
+    
+    // Esquina inferior izquierda
+    destinoX = (int)(r.x / ANCHO_CASILLA);
+    if(TERRENO[destinoY][destinoX] < 2) return false;
+    
+    return true;
 }
 
 Vector2 PixelesACasilla(Vector2 posicionPx){
@@ -64,5 +67,4 @@ Vector2 CentroCasilla(Vector2 casilla){
 }
 
 void EscenarioDibujar(){
-    // Por ahora vac�a, solo l�gica
 }

@@ -27,8 +27,7 @@ typedef enum GameScreen { LOGO = 0, TITLE, GAMEPLAY, ENDING } GameScreen;
 //------------------------------------------------------------------------------------
 // Program main entry point
 //------------------------------------------------------------------------------------
-int main(void)
-{
+int main(void){
     // Initialization
     //--------------------------------------------------------------------------------------
     const int screenWidth = 800;
@@ -39,16 +38,16 @@ int main(void)
     GameScreen currentScreen = LOGO;
 
     // TODO: Initialize all required variables and load all required data here!
-    Escenario escenario = EscenarioCrear(screenWidth, screenHeight);
-    Jugador jugador = JugadorCrear((Vector2){screenWidth/2.0f - 16, screenHeight/2.0f - 16});
+    EscenarioIniciar();
+    Jugador jugador = JugadorCrear((Vector2){screenWidth/2.0f - JUGADOR_ANCHO_HITBOX, screenHeight/2.0f - JUGADOR_ALTO_HITBOX});
     float deltaTime;
     float framesCounter = 0.0f;         // Useful to count frames
     SetTargetFPS(60);               // Set desired framerate (frames-per-second)
     //--------------------------------------------------------------------------------------
 
     // Main game loop
-    while (!WindowShouldClose())    // Detect window close button or ESC key
-    {
+    while (!WindowShouldClose()){    // Detect window close button or ESC key
+    
         // Update
         //----------------------------------------------------------------------------------
         deltaTime = GetFrameTime();
